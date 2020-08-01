@@ -1,0 +1,43 @@
+$bgLeft: 115px;
+$bgTop: 120px;
+$bgWidth: 515px;
+$bgHeight: 385px;
+
+.Device {
+    outline: 1px solid red;
+    position: relative;
+    width: 750px;
+    height: 625px;
+    background-image: url(/images/ipad-mini-horizontal-2.png), url(/images/background.jpg);
+    background-position: left top, left $bgLeft top $bgTop;
+    background-size: 100% 100%, $bgWidth $bgHeight;
+    background-repeat: no-repeat;
+
+    &__display {
+        border: 2px solid green;
+        position: relative;
+        top: $bgTop;
+        left: $bgLeft;
+        display: flex;
+        flex-wrap: nowrap;
+        width: $bgWidth;
+        height: $bgHeight;
+    }
+
+    &__sliderWrap {
+        width: $bgWidth - 60px;
+    }
+
+    &__side {
+        height: 100%;
+        width: 30px;
+    }
+}
+
+.Slider {
+    width: 100%;
+}
+
+.btn {
+    margin-top: 50px;
+}
