@@ -4,7 +4,7 @@ import { useDrop } from 'react-dnd';
 import { AppIcon } from 'components/app-icon';
 import './styles.scss';
 
-export const Screen = ({apps, arrId, moveCard}) => {
+export const Screen = ({apps, arrId, moveCard, setCanSlide}) => {
     const [, drop] = useDrop({
         accept: 'box',
         drop: (item, monitor) => {
@@ -16,6 +16,9 @@ export const Screen = ({apps, arrId, moveCard}) => {
             const dropCard = arrId;
             
             return {dragIndex, dragCard, dropIndex, dropCard}
+        },
+        hover: () => {
+            setCanSlide(true);
         },
         collect: (monitor) => ({
           isOver: monitor.isOver(),
@@ -52,4 +55,5 @@ Screen.propTypes = {
     apps: PropTypes.array,
     arrId: PropTypes.number.isRequired,
     moveCard: PropTypes.func,
+    setCanSlide: PropTypes.func.isRequired,
 }

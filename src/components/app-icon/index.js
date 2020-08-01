@@ -22,7 +22,7 @@ export const AppIcon = ({ imgSrc, name, moveCard, index, arrId }) => {
         item: { type: 'box', index, arrId },
         end: (item, monitor) => {
             const param = monitor.getDropResult();
-            moveCard(param);
+            if (param) moveCard(param);
         },
     })
 

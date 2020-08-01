@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Slider from 'react-slick';
@@ -37,71 +37,92 @@ const settings = {
     swipe: false,
 };
 
-export class Device extends React.Component {
-    sliderInstance = React.createRef();
-    state = {
-        screenApps: getScreenArray(apps),
+const swapArray = function (arr, params) {
+    const { dragIndex, dragCard, dropIndex, dropCard } = params;
+    const culcDropIndex = dropIndex === null ? arr[dropCard].length : dropIndex;
+    const dragElem = arr[dragCard][dragIndex];
+    const dropEl = arr[dropCard][culcDropIndex];
+    
+    if (dragElem === dropEl) return arr;
+
+    if (dropEl) {
+        arr[dragCard][dragIndex] = dropEl;
+        arr[dropCard][dropIndex] = dragElem;
+    } else if (arr[dropCard].length < ELEM_COUNT) {
+        arr[dropCard][culcDropIndex] = dragElem;
+        arr[dragCard].splice(dragIndex, 1);
+    } else {
+        return arr;
+    }
+    
+    return [...arr];
+}
+
+export const Device = () => {
+    const sliderInstance = useRef(null);
+    const [appsArray, setAppsArray] = useState(getScreenArray(apps));
+    let canSlide = true;
+    const setCanSlide = (val) => {
+        canSlide = val;
     }
 
-    changeSlide = () => {
-        const { slickNext } = this.sliderInstance?.current;
-        typeof slickNext === 'function' && slickNext();
-    }
-
-    swapArray = function (arr, params) {
-        const { dragIndex, dragCard, dropIndex, dropCard } = params;
-        const culcDropIndex = dropIndex === null ? arr[dropCard].length : dropIndex;
-        const dragElem = arr[dragCard][dragIndex];
-        const dropEl = arr[dropCard][culcDropIndex];
-        
-        if (dragElem === dropEl) return arr;
-
-        if (dropEl) {
-            arr[dragCard][dragIndex] = dropEl;
-            arr[dropCard][dropIndex] = dragElem;
-        } else if (arr[dropCard].length < ELEM_COUNT) {
-            arr[dropCard][culcDropIndex] = dragElem;
-            arr[dragCard].splice(dragIndex, 1);
+    const changeSlide = (isNext) => {
+        const { slickNext, slickPrev } = sliderInstance?.current;
+        if (isNext) {
+            typeof slickNext === 'function' && slickNext();
         } else {
-            return arr;
+            typeof slickPrev === 'function' && slickPrev();
         }
         
-        return [...arr];
     }
 
-    moveCard = (params) => {
-        const { screenApps } = this.state;
-        const newArr = this.swapArray(screenApps, params);
+    const moveCard = (params) => {
+        const newArr = swapArray(appsArray, params);
         
-        if (newArr === screenApps) return null;
+        if (newArr === appsArray) return null;
         
-        this.setState(
-            {
-                screenApps: newArr,
+        setAppsArray(newArr);
+    }
+
+    const [, leftArrow] = useDrop({
+        accept: 'box',
+        hover: () => {
+            if (canSlide) {
+                changeSlide(false);
+                canSlide = false;
             }
-        );
-    }
+        },
+        canDrop: () => {
+            return false
+        },
+    });
 
-    render() {
-        const { screenApps } = this.state;
-        return (
-            <div className='Device'>
-                <div className='Device__display'>
-                    <div className='Device__side'>{'<'}</div>
-                    <div className='Device__sliderWrap'>
-                        <DndProvider backend={HTML5Backend}>
-                            <Slider className='Slider' ref={this.sliderInstance} {...settings}>
-                                {screenApps.map((elems, i) => {
-                                    return <Screen key={i} arrId={i} apps={elems} moveCard={this.moveCard} />
-                                })}
-                            </Slider>
-                        </DndProvider>
-                    </div>
-                    <div className='Device__side' onMouseEnter={(el)=>{
-                        console.log("Device -> render -> el=", el.target);
-                    }}>{'>'}</div>
+    const [, rightArrow] = useDrop({
+        accept: 'box',
+        hover: () => {
+            if (canSlide) {
+                changeSlide(true);
+                canSlide = false;
+            }
+        },
+        canDrop: () => {
+            return false
+        },
+    });
+
+    return (
+        <div className='Device'>
+            <div className='Device__display'>
+                <div className='Device__side' ref={leftArrow} >{'<'}</div>
+                <div className='Device__sliderWrap'>
+                    <Slider className='Slider' ref={sliderInstance} {...settings}>
+                        {appsArray.map((elems, i) => {
+                            return <Screen key={i} arrId={i} apps={elems} moveCard={moveCard} setCanSlide={setCanSlide} />
+                        })}
+                    </Slider>
                 </div>
+                <div className='Device__side' ref={rightArrow} >{'>'}</div>
             </div>
-        )
-    }
+        </div>
+    )
 }
