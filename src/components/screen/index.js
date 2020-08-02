@@ -30,15 +30,15 @@ export const Screen = ({apps, arrId, moveCard, setCanSlide}) => {
         <div className='Screen' ref={drop}>
             {apps.map((item, index) => {
                 const { id, name } = item;
-                const imgSrc = `/images/icons/${name}`;
+                
                 return (
                     <AppIcon
                         key={id}
-                        imgSrc={imgSrc}
-                        name={name.replace('.png', '')}
+                        name={name}
                         index={index}
                         arrId={arrId}
                         moveCard={moveCard}
+                        isDrag={true}
                     />
                 )
             })}

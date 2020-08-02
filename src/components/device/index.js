@@ -1,14 +1,17 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Slider from 'react-slick';
+import { useDrop } from 'react-dnd';
+
 import { Screen } from 'components/screen';
-import { HTML5Backend } from 'react-dnd-html5-backend';
-import { DndProvider, useDrop } from 'react-dnd';
+import { DeviceMenu } from 'components/device-menu';
+import { randomInteger } from 'helpers';
 import apps from './apps-data.json';
 import './styles.scss';
 
 const ELEM_COUNT = 20;
+const RANDOM_COUNT = 4;
 
 const getScreenArray = (arr) => {
     const result = [];
@@ -25,6 +28,11 @@ const getScreenArray = (arr) => {
     }
     result.push([]);
     return result;
+}
+
+const getRandomApp = (arr) => {
+    const randomValue = randomInteger(0, arr.length - RANDOM_COUNT);
+    return arr.slice(randomValue, randomValue + RANDOM_COUNT);
 }
 
 const settings = {
@@ -60,7 +68,9 @@ const swapArray = function (arr, params) {
 
 export const Device = () => {
     const sliderInstance = useRef(null);
-    const [appsArray, setAppsArray] = useState(getScreenArray(apps));
+    const [appsArray, setAppsArray] = useState(useMemo(()=>getScreenArray(apps), []));
+    const randomArray = useMemo(()=>getRandomApp(apps), []);
+    console.log("Device -> randomArray=", randomArray)
     let canSlide = true;
     const setCanSlide = (val) => {
         canSlide = val;
@@ -113,15 +123,21 @@ export const Device = () => {
     return (
         <div className='Device'>
             <div className='Device__display'>
-                <div className='Device__side' ref={leftArrow} >{'<'}</div>
-                <div className='Device__sliderWrap'>
-                    <Slider className='Slider' ref={sliderInstance} {...settings}>
-                        {appsArray.map((elems, i) => {
-                            return <Screen key={i} arrId={i} apps={elems} moveCard={moveCard} setCanSlide={setCanSlide} />
-                        })}
-                    </Slider>
+                <div className='Device__top'>123456</div>
+                <div className='Device__mid'>
+                    <div className='Device__side' ref={leftArrow} >{'<'}</div>
+                    <div className='Device__sliderWrap'>
+                        <Slider className='Slider' ref={sliderInstance} {...settings}>
+                            {appsArray.map((elems, i) => {
+                                return <Screen key={i} arrId={i} apps={elems} moveCard={moveCard} setCanSlide={setCanSlide} />
+                            })}
+                        </Slider>
+                    </div>
+                    <div className='Device__side' ref={rightArrow} >{'>'}</div>
                 </div>
-                <div className='Device__side' ref={rightArrow} >{'>'}</div>
+                <div className='Device__bottom'>
+                    <DeviceMenu apps={randomArray}/>
+                </div>
             </div>
         </div>
     )

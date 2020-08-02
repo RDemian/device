@@ -1,16 +1,29 @@
+@import '../../assets/styles/theme.scss';
+
 .Screen {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
     justify-items: center;
     align-items: center;
     width: 100%;
-    height: 300px;
-    border: 1px solid red;
+    height: 265px;
 
-    @media (max-width: 1300px) {
-        background-color: blueviolet;
+    @media (min-width: $mobile-h) {
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+        grid-template-rows: 1fr 1fr 1fr 1fr;
+        height: 138px;
+    }
+
+    @media (min-width: $tablet) {
         grid-template-columns: 1fr 1fr 1fr 1fr;
         grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+        height: 390px;
+    }
+
+    @media (min-width: $tablet-h) {
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+        grid-template-rows: 1fr 1fr 1fr 1fr;
+        height: 265px;
     }
 }

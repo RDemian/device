@@ -1,36 +1,147 @@
-$bgLeft: 115px;
-$bgTop: 120px;
-$bgWidth: 515px;
-$bgHeight: 385px;
+@import '../../assets/styles/theme.scss';
+
+$width-m: 317px;
+$height-m: 568px;
+$bgLeft-m: 57px;
+$bgTop-m: 103px;
+$bgWidth-m: 204px;
+$bgHeight-m: 359px;
+
+$width-mh: 568px;
+$height-mh: 317px;
+$bgLeft-mh: 103px;
+$bgTop-mh: 57px;
+$bgWidth-mh: 359px;
+$bgHeight-mh: 204px;
+
+$width-t: 625px;
+$height-t: 750px;
+$bgLeft-t: 120px;
+$bgTop-t: 115px;
+$bgWidth-t: 385px;
+$bgHeight-t: 515px;
+
+$width-th: 750px;
+$height-th: 625px;
+$bgLeft-th: 115px;
+$bgTop-th: 120px;
+$bgWidth-th: 515px;
+$bgHeight-th: 385px;
 
 .Device {
-    outline: 1px solid red;
     position: relative;
-    width: 750px;
-    height: 625px;
-    background-image: url(/images/ipad-mini-horizontal-2.png), url(/images/background.jpg);
-    background-position: left top, left $bgLeft top $bgTop;
-    background-size: 100% 100%, $bgWidth $bgHeight;
+    width: $width-m;
+    height: $height-m;
+    background-image: url(/images/background.jpg), url(/images/iphone5-vertical.png);
+    background-position: left $bgLeft-m top $bgTop-m, left top;
+    background-size: $bgWidth-m $bgHeight-m, 100% 100%;
     background-repeat: no-repeat;
+    color: $text-prime-color;
 
     &__display {
-        border: 2px solid green;
         position: relative;
-        top: $bgTop;
-        left: $bgLeft;
+        top: $bgTop-m;
+        left: $bgLeft-m;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        width: $bgWidth-m;
+        height: $bgHeight-m;
+    }
+
+    &__top {
+        font-size: 9px;
+        color: $text-light-color;
+    }
+
+    &__mid {
         display: flex;
         flex-wrap: nowrap;
-        width: $bgWidth;
-        height: $bgHeight;
+    }
+
+    &__bottom {
+        flex: 1 1 auto;
+        display: flex;
+        justify-content: space-evenly;
+        margin-top: 25px;
+        padding: 5px 20px;
+        backdrop-filter: blur(10px);
     }
 
     &__sliderWrap {
-        width: $bgWidth - 60px;
+        width: $bgWidth-m - 40px;
     }
 
     &__side {
         height: 100%;
         width: 30px;
+    }
+
+    @media (min-width: $mobile-h) {
+        width: $width-mh;
+        height: $height-mh;
+        background-image: url(/images/background.jpg), url(/images/iphone5-horizontal.png);
+        background-position: left $bgLeft-mh top $bgTop-mh, left top;
+        background-size: $bgWidth-mh $bgHeight-mh, 100% 100%;
+
+        &__display {
+            top: $bgTop-mh;
+            left: $bgLeft-mh;
+            width: $bgWidth-mh;
+            height: $bgHeight-mh;
+        }
+
+        &__sliderWrap {
+            width: $bgWidth-mh - 40px;
+        }
+
+        &__bottom {
+            margin-top: 19px;
+            padding: 0 20px;
+        }
+    }
+
+    @media (min-width: $tablet) {
+        width: $width-t;
+        height: $height-t;
+        background-image: url(/images/background.jpg), url(/images/ipad-mini-vertical.png);
+        background-position: left $bgLeft-t top $bgTop-t, left top;
+        background-size: $bgWidth-t $bgHeight-t, 100% 100%;
+
+        &__display {
+            top: $bgTop-t;
+            left: $bgLeft-t;
+            width: $bgWidth-t;
+            height: $bgHeight-t;
+        }
+
+        &__sliderWrap {
+            width: $bgWidth-t - 60px;
+        }
+
+        &__bottom {
+            margin-top: 25px;
+            padding: 5px 30px;
+        }
+    }
+
+    @media (min-width: $tablet-h) {
+        width: $width-th;
+        height: $height-th;
+        background-image: url(/images/background.jpg), url(/images/ipad-mini-horizontal.png);
+        background-position: left $bgLeft-th top $bgTop-th, left top;
+        background-size: $bgWidth-th $bgHeight-th, 100% 100%;
+
+        &__display {
+            top: $bgTop-th;
+            left: $bgLeft-th;
+            width: $bgWidth-th;
+            height: $bgHeight-th;
+        }
+
+        &__sliderWrap {
+            width: $bgWidth-th - 60px;
+        }
     }
 }
 
