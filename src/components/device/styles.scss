@@ -38,6 +38,10 @@ $bgHeight-th: 385px;
     background-repeat: no-repeat;
     color: $text-prime-color;
 
+    &_sticky {
+        align-self: flex-start;
+    }
+
     &__display {
         position: relative;
         top: $bgTop-m;

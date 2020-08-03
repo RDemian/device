@@ -23,14 +23,31 @@ const settings = {
 
 export const Device = () => {
     const sliderInstance = useRef(null);
+    const deviceInstance = useRef(null);
+    const [isOnTop, setIsOnTop] = useState(false);
     const isTablet = isMatch(MQ_TABLET);
+    
     const [appsArray, setAppsArray] = useState(useMemo(()=>getScreenArray(apps, isTablet), [isTablet]));
     const randomArray = useMemo(()=>getRandomApp(apps), []);
     let canSlide = true;
-    const setCanSlide = (val) => {
-        canSlide = val;
-    }
+    const setCanSlide = value => canSlide = value;
+
+    /* отступ от верха экрана */
+    const getIsOnTop = () => deviceInstance.current?.offsetHeight >= window.innerHeight;
+
+    const handleResize = useCallback(() => {
+        setIsOnTop(getIsOnTop());
+    }, [])
+
+    useEffect(() => {
+        setIsOnTop(getIsOnTop());
+        window.addEventListener('resize', handleResize);
+        return ()=>{
+            window.removeEventListener('resize', handleResize)
+        }
+    }, [handleResize])
     
+    /* переключение между мобильной и планшетной версией */
     const handleMediaChange = useCallback((mql) => {
         setAppsArray(getScreenArray(apps, mql.matches))
     }, [])
@@ -81,7 +98,7 @@ export const Device = () => {
     const [, rightArrow] = useDrop(getDropSettings(true));
 
     return (
-        <div className='Device' >
+        <div className={`Device ${isOnTop ? 'Device_sticky':''}`} ref={deviceInstance} >
             <div className='Device__display'>
                 <div className='Device__top'>
                     <Watch />
