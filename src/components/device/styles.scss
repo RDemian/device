@@ -50,6 +50,9 @@ $bgHeight-th: 385px;
     }
 
     &__top {
+        display: flex;
+        justify-content: center;
+        width: 100%;
         font-size: 9px;
         color: $text-light-color;
     }

@@ -33,7 +33,13 @@
         top: 0;
         
         &_show {
-            top: -45px;
+            top: -25px;
+        }
+
+        @media (min-width: $tablet) {
+            &_show {
+                top: -45px;
+            }
         }
     }
 
