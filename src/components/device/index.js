@@ -12,7 +12,7 @@ import './styles.scss';
 
 const ELEM_COUNT = 20;
 const RANDOM_COUNT = 4;
-const mediaWidthTablet = '(min-width: 768px)';
+const mqTablet = '(min-width: 768px)';
 const MOBILE_KEY = 'mobile_key';
 const TABLET_KEY = 'tablet_key';
 
@@ -26,13 +26,13 @@ const settings = {
     swipe: false,
 };
 
-const getScreenArray = (arr, isTablet) => {
+const getScreenArray = (arr) => {
+    const isTablet = window.matchMedia(mqTablet).matches;
     const currKey = isTablet ? TABLET_KEY : MOBILE_KEY;
     const localData = getFromStorage(currKey);
-    console.log("getScreenArray -> localData 1=", localData)
     
     if (Array.isArray(localData) && localData.length) return localData;
-    console.log("getScreenArray -> getScreenArray прошел дальше")
+    
     const result = [];
     let tempArr = [];
     arr.forEach(curr => {
@@ -76,15 +76,8 @@ const swapArray = (arr, params) => {
 }
 
 export const Device = () => {
-    console.log("*** render Device -> Device ***")
     const sliderInstance = useRef(null);
-    const tabletQuery = window.matchMedia(mediaWidthTablet);
-    const [isTablet, setIsTablet] = useState(tabletQuery.matches);
-    console.log("Device -> isTablet", isTablet)
-    //const memo = useMemo(()=>getScreenArray(apps, isTablet), [isTablet]);
-    //console.log("Device -> memo-=", memo)
-    const [appsArray, setAppsArray] = useState(useMemo(()=>getScreenArray(apps, isTablet), [isTablet]));
-    console.log("Device -> appsArray", appsArray)
+    const [appsArray, setAppsArray] = useState(useMemo(()=>getScreenArray(apps), []));
     const randomArray = useMemo(()=>getRandomApp(apps), []);
     let canSlide = true;
     const setCanSlide = (val) => {
@@ -92,19 +85,17 @@ export const Device = () => {
     }
     
     const handleMediaChange = useCallback((mql) => {
-        if (isTablet !== mql.matches) {
-            setIsTablet(mql.matches);
-            setAppsArray(getScreenArray(apps, isTablet))
-        }
-    }, [isTablet])
+        setAppsArray(getScreenArray(apps, mql.matches))
+    }, [])
 
     useEffect(()=>{
+        const tabletQuery = window.matchMedia(mqTablet);
         tabletQuery.addListener(handleMediaChange);
 
         return () => {
             tabletQuery.removeListener(handleMediaChange);
         }
-    }, [tabletQuery, handleMediaChange]);
+    }, [handleMediaChange]);
     
     const changeSlide = (isNext) => {
         const { slickNext, slickPrev } = sliderInstance?.current;
@@ -122,6 +113,8 @@ export const Device = () => {
         if (newArr === appsArray) return null;
         
         setAppsArray(newArr);
+
+        const isTablet = window.matchMedia(mqTablet).matches;
         setToStorage(isTablet ? TABLET_KEY : MOBILE_KEY , newArr);
     }
 
