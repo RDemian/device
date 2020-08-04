@@ -1,4 +1,4 @@
-import React, { useState, useRef, useMemo, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useMemo, useEffect } from 'react';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Slider from 'react-slick';
@@ -33,33 +33,31 @@ export const Device = () => {
     const setCanSlide = value => canSlide = value;
 
     /* отступ от верха экрана */
-    const getIsOnTop = () => deviceInstance.current?.offsetHeight >= window.innerHeight;
-
-    const handleResize = useCallback(() => {
-        setIsOnTop(getIsOnTop());
-    }, [])
-
     useEffect(() => {
+        const getIsOnTop = () => deviceInstance.current?.offsetHeight >= window.innerHeight;
+
+        const handleResize = () => setIsOnTop(getIsOnTop());
+
         setIsOnTop(getIsOnTop());
         window.addEventListener('resize', handleResize);
         return ()=>{
             window.removeEventListener('resize', handleResize)
         }
-    }, [handleResize])
+    }, [])
     
     /* переключение между мобильной и планшетной версией */
-    const handleMediaChange = useCallback((mql) => {
-        setAppsArray(getScreenArray(apps, mql.matches))
-    }, [])
-
     useEffect(() => {
         const mqTablet = window.matchMedia(MQ_TABLET);
+        const handleMediaChange = (mql) => {
+            setAppsArray(getScreenArray(apps, mql.matches))
+        };
+
         mqTablet.addListener(handleMediaChange);
 
         return () => {
             mqTablet.removeListener(handleMediaChange);
         }
-    }, [handleMediaChange]);
+    }, []);
     
     const changeSlide = (isNext) => {
         const { slickNext, slickPrev } = sliderInstance?.current;

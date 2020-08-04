@@ -7,7 +7,7 @@ export const AppIcon = ({ name, moveCard, index, arrId, isDrag, isLight, hasPopu
     const ref = useRef(null);
     const imgSrc = `/images/icons/${name}`;
     const [isPopupShow, setPopupShow] = useState(false);
-    const handleClick = () => setPopupShow(false);
+    
     const togglePopup = () => {
         if (hasPopup) {
             setPopupShow(!isPopupShow);
@@ -15,6 +15,8 @@ export const AppIcon = ({ name, moveCard, index, arrId, isDrag, isLight, hasPopu
     }
 
     useEffect(() => {
+        const handleClick = () => setPopupShow(false);
+        
         if (isPopupShow)  {
             document.addEventListener("click", handleClick);
         } else {
